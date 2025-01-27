@@ -14,8 +14,6 @@ wss.on('connection', (socket) => {
   socket.on('message', (message) => {
     tempArr.push(message);
     console.log(`收到消息：${message}`);
-    // arrStr = tempObj.arr2.join();
-    // socket.send(arrStr)
     tempObj.arr1 = tempArr.join();
     let res = JSON.stringify(tempObj)
     socket.send(res)
