@@ -28,7 +28,7 @@ wss.on('connection', (socket) => {
     console.log(`webSocket連接已關閉`);
   })
 
-  setInterval(()=> { // 每秒產隨機值丟給前端
+  setInterval(()=> { // 每3秒產隨機值丟給前端
     let num = generateRandomNumber();
     if(tempArr2.length < 10) {
       tempArr2.push(num);
