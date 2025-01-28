@@ -11,6 +11,8 @@
 1個 cd ./server ，然後執行 node index.js<br>
 
 ***
-
 ※ 後端code 位於server資料夾裡 <br>
 預設2887 port
+***
+
+![image](demo/CPT2501281212-705x816.gif)
