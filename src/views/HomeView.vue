@@ -12,24 +12,20 @@
       };
     },
     methods: {
-      ws(handler) {
-        console.log(123);
+      ws() {
         this.socket = new WebSocket("ws://localhost:2887");
 
         this.socket.onopen = (event) => {
           console.log("webSocket已連接");
-          // 當連接成功時，如果handler為true，則發送消息
-          if (handler) {
-            this.sendMsg();
-          }
+          this.sendMsg();
         };
 
         this.socket.onmessage = (event) => {
           console.log('收到回覆: ' + event.data);
           console.log('event==>',event);
           let res = JSON.parse(event.data)
-          this.showArr1 = res.arr1.split(',');
-          this.showArr2 = res.arr2;
+          this.showArr1 = res.arr1.split(',').reverse();
+          this.showArr2 = res.arr2.split(',');
         };
 
         this.socket.onclose = (event) => {
@@ -40,6 +36,7 @@
       sendMsg() {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
           this.socket.send(this.inputMsg);
+          this.inputMsg = "";
         } else {
           console.error("webSocket未連接");
         }
@@ -50,16 +47,20 @@
 
 <template>
   <div class="wrapper">
-    <h1 class="title">ws test</h1>
+    <h1 class="title">ws sample</h1>
     <div class="input_wrap">
-      <input type="text" v-model="inputMsg">
-      <button class="send" @click="sendMsg">送出</button>
+      <input type="text" v-model="inputMsg" @keyup.enter="sendMsg()">
+      <button class="send" @click="sendMsg()">送出</button>
     </div>
     <div class="show_msg_wrap show_msg_wrap1">
+      <h2>由前端輸入文字傳至後端儲存 再回傳顯示出來</h2>
       <p v-for="item in showArr1">{{ item }}</p>
     </div>
     <div class="show_msg_wrap show_msg_wrap2">
-      <p v-for="item in showArr2">{{ item }}</p>
+      <h2>由後端每3秒自動傳新值給前端顯示</h2>
+       <div class="wrap">
+         <p v-for="item in showArr2">{{ item }}</p>
+       </div>
     </div>
   </div>
 </template>
@@ -79,19 +80,15 @@
   }
   h1.title{
     color: #fa0;
-    width: 50%;
+    width: 90%;
     margin: 1rem auto;
-    // border: 1px solid #fa0;
     text-align: center;
   }
-
+  
   .input_wrap{
     position: relative;
-    width: 30%;
-    // border: 1px dashed #fa0;
+    width: 600px;
     margin: 2rem auto;
-
-    
 
     input[type=text] {
       display: block;
@@ -129,13 +126,12 @@
 
       &:hover{
         background: #fa0;
-        // color: #000;
       }
     }
   }
 
   .show_msg_wrap{
-    width: 30%;
+    width: 600px;
     border: 1px dashed #fa0;
     margin: 0 auto 2rem;
     padding: 1rem 0;
@@ -149,13 +145,27 @@
       font-size: 2rem;
       text-align: center;
     }
+
+    h2{
+      font-size: 20px;
+      color: #fa0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
   }
   
   .show_msg_wrap1{
     height: 350px;
   }
+  
   .show_msg_wrap2{
-    // width: 500px;
     height: 150px;
+    .wrap{
+      display: flex;
+      justify-content: center;
+    }
+    p{
+      margin-right: 10px;
+    }
   }
 </style>

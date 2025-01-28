@@ -2,19 +2,24 @@ const http = require('http');
 const WebSocket = require('ws');
 const server = http.createServer();
 const wss = new WebSocket.Server({ server });
-let tempArr = [];
+let tempArr1 = [];
+let tempArr2 = [];
 let tempObj = {
   arr1:"",
-  arr2:[]
+  arr2:""
+}
+
+function generateRandomNumber() {
+  return Math.floor(Math.random() * 100) + 1;
 }
 
 wss.on('connection', (socket) => {
   console.log('WebSocket連接已開啟');
 
   socket.on('message', (message) => {
-    tempArr.push(message);
+    tempArr1.push(message);
     console.log(`收到消息：${message}`);
-    tempObj.arr1 = tempArr.join();
+    tempObj.arr1 = tempArr1.join();
     let res = JSON.stringify(tempObj)
     socket.send(res)
   })
@@ -23,14 +28,21 @@ wss.on('connection', (socket) => {
     console.log(`webSocket連接已關閉`);
   })
 
-  setInterval(()=> {
-    tempObj.arr2.push('￣▽￣y')
+  setInterval(()=> { // 每秒產隨機值丟給前端
+    let num = generateRandomNumber();
+    if(tempArr2.length < 10) {
+      tempArr2.push(num);
+    }else {
+      tempArr2.shift();
+      tempArr2.push(num);
+    }
+    tempObj.arr2 = tempArr2.join();
     let res = JSON.stringify(tempObj)
     socket.send(res)
-  },5000)
+  },3000)
 })
 
-server.on('req',(request,response) => {
+server.on('request',(request,response) => {
   response.writeHead(200, {'Content-Type': 'text/plain'});
   response.end('Hello World')
 });

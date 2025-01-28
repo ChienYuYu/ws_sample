@@ -8,9 +8,7 @@
 
 1個執行 npm run dev <br>
 
-1個 cd ./server <br>
-
-然後執行 node index.js <br>
+1個 cd ./server ，然後執行 node index.js<br>
 
 ***
 
